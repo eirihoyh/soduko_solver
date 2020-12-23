@@ -81,11 +81,35 @@ class Solve_sudoku:
         """
         col = [col[pos[1]] for col in self.board]
         row = self.board[pos[0]]
-        no_go = list(set(col + row))
+
+        square_row = int(np.ceil(self.board[0] / 3))
+        square_col = int(np.ceil(self.board[1] / 3))
+
+        square = self.find_square(square_row, square_col)
+
+        no_go = list(set(col + row + square))
         if 0 in no_go:
             no_go.remove(0)
         return no_go
 
+    def find_square(self, row, col):
+        if row == 1 and col == 1:
+            num = []
+            for i in range(-1,2):
+                for j in range(-1,2):
+                    num.append(self.board[row+i][col+j])
+
+        if row == 2 and col == 2:
+            num = []
+            for i in range(-1,2):
+                for j in range(-1,2):
+                    num.append(self.board[row+i][col+j])
+
+        if row == 3 and col == 3:
+            num = []
+            for i in range(-1,2):
+                for j in range(-1,2):
+                    num.append(self.board[row+i][col+j])
     def solve(self):
         if not self.try_to_solve():
             print("This board is not solvable")
