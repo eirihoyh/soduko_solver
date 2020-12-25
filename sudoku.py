@@ -27,7 +27,6 @@ class Solve_sudoku:
 
             if i == row_length:
                 self.board = board
-                print(board)
             else:
                 raise RuntimeError("Board must be quadratic")
 
@@ -82,34 +81,17 @@ class Solve_sudoku:
         col = [col[pos[1]] for col in self.board]
         row = self.board[pos[0]]
 
-        square_row = int(np.ceil(self.board[0] / 3))
-        square_col = int(np.ceil(self.board[1] / 3))
-
-        square = self.find_square(square_row, square_col)
+        square_row = (int(np.ceil((1+pos[0]) / 3))) * 3
+        square_col = (int(np.ceil((1+pos[1]) / 3))) * 3
+        three_rows = self.board[square_row-3:square_row]
+        square = []
+        for diff_rows in three_rows:
+            for i in range(square_col-3, square_col):
+                square.append(diff_rows[i])
 
         no_go = list(set(col + row + square))
-        if 0 in no_go:
-            no_go.remove(0)
         return no_go
 
-    def find_square(self, row, col):
-        if row == 1 and col == 1:
-            num = []
-            for i in range(-1,2):
-                for j in range(-1,2):
-                    num.append(self.board[row+i][col+j])
-
-        if row == 2 and col == 2:
-            num = []
-            for i in range(-1,2):
-                for j in range(-1,2):
-                    num.append(self.board[row+i][col+j])
-
-        if row == 3 and col == 3:
-            num = []
-            for i in range(-1,2):
-                for j in range(-1,2):
-                    num.append(self.board[row+i][col+j])
     def solve(self):
         if not self.try_to_solve():
             print("This board is not solvable")
@@ -118,14 +100,15 @@ class Solve_sudoku:
 
 
 if __name__ == '__main__':
-    expert_sudoku = [[0,0,9,0,6,5,0,0,0],
-                     [0,0,0,3,0,0,0,0,0],
-                     [5,0,0,0,0,0,0,0,4],
-                     [0,0,3,0,0,0,0,0,7],
-                     [0,8,0,4,0,2,9,0,0],
-                     [0,0,0,0,1,7,0,0,0],
-                     [0,0,0,0,0,0,2,0,0],
-                     [0,0,5,0,9,6,8,0,0],
-                     [7,2,0,0,0,0,3,0,0]]
+    expert_sudoku = [[0,0,0,7,0,0,0,0,0],
+                     [8,0,5,9,0,4,3,0,0],
+                     [0,6,4,0,0,0,9,1,0],
+                     [0,0,0,0,0,5,0,2,0],
+                     [0,0,0,0,0,0,1,8,0],
+                     [0,0,0,0,0,2,0,0,6],
+                     [0,0,9,6,0,1,2,0,0],
+                     [2,8,0,0,0,0,7,0,0],
+                     [0,0,1,4,0,7,0,0,0]]
+
     solver = Solve_sudoku(expert_sudoku)
     solver.solve()
