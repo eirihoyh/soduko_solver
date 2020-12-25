@@ -40,19 +40,19 @@ class Solve_sudoku:
             Bool, True when done solving and False if not solvable.
         """
         empty_places = self.find_empty()
-        if empty_places == []:
+        if empty_places == True:
             return True
 
         for i in self.numbers:
-            taken = self.taken_numbers(empty_places[0])
+            taken = self.taken_numbers(empty_places)
             usable_numbers = [x for x in self.numbers if x not in taken]
             if i in usable_numbers:
-                self.board[empty_places[0][0]][empty_places[0][1]] = i
+                self.board[empty_places[0]][empty_places[1]] = i
 
                 if self.try_to_solve() is True:
                     return True
 
-                self.board[empty_places[0][0]][empty_places[0][1]] = 0
+                self.board[empty_places[0]][empty_places[1]] = 0
 
         return False
 
@@ -62,13 +62,12 @@ class Solve_sudoku:
         :return:
         a list of positions in the board that contains zero
         """
-        empty = []
         for i, row in enumerate(self.board):
             for j, col in enumerate(row):
                 if col == 0:
-                    empty.append([i, j])
+                    return [i, j]
 
-        return empty
+        return True
 
     def taken_numbers(self, pos):
         """
@@ -81,12 +80,12 @@ class Solve_sudoku:
         col = [col[pos[1]] for col in self.board]
         row = self.board[pos[0]]
 
-        square_row = (int(np.ceil((1+pos[0]) / 3))) * 3
-        square_col = (int(np.ceil((1+pos[1]) / 3))) * 3
-        three_rows = self.board[square_row-3:square_row]
+        square_row = (int(np.ceil((1 + pos[0]) / 3))) * 3
+        square_col = (int(np.ceil((1 + pos[1]) / 3))) * 3
+        three_rows = self.board[square_row - 3:square_row]
         square = []
         for diff_rows in three_rows:
-            for i in range(square_col-3, square_col):
+            for i in range(square_col - 3, square_col):
                 square.append(diff_rows[i])
 
         no_go = list(set(col + row + square))
@@ -100,15 +99,15 @@ class Solve_sudoku:
 
 
 if __name__ == '__main__':
-    expert_sudoku = [[0,0,0,7,0,0,0,0,0],
-                     [8,0,5,9,0,4,3,0,0],
-                     [0,6,4,0,0,0,9,1,0],
-                     [0,0,0,0,0,5,0,2,0],
-                     [0,0,0,0,0,0,1,8,0],
-                     [0,0,0,0,0,2,0,0,6],
-                     [0,0,9,6,0,1,2,0,0],
-                     [2,8,0,0,0,0,7,0,0],
-                     [0,0,1,4,0,7,0,0,0]]
+    expert_sudoku = [[0, 0, 0, 7, 0, 0, 0, 0, 0],
+                     [8, 0, 5, 9, 0, 4, 3, 0, 0],
+                     [0, 6, 4, 0, 0, 0, 9, 1, 0],
+                     [0, 0, 0, 0, 0, 5, 0, 2, 0],
+                     [0, 0, 0, 0, 0, 0, 1, 8, 0],
+                     [0, 0, 0, 0, 0, 2, 0, 0, 6],
+                     [0, 0, 9, 6, 0, 1, 2, 0, 0],
+                     [2, 8, 0, 0, 0, 0, 7, 0, 0],
+                     [0, 0, 1, 4, 0, 7, 0, 0, 0]]
 
-    solver = Solve_sudoku(expert_sudoku)
+    solver = Solve_sudoku()
     solver.solve()
